@@ -1,0 +1,234 @@
+.technology-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgb(47, 12, 74);
+  border-left: 6px solid #3a1095;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.technology-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgb(172, 111, 246);
+}
+
+/* Фоновый эффект */
+.technology-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Статус: Не начато */
+.status-not-started {
+  border-left: 6px solid #4a1095;
+  background: linear-gradient(135deg, #71868b8e 10%, #fffaf0 70%);
+}
+
+.status-not-started::after {
+  content: "❌";
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 32px;
+  animation: bounce 6s ease-out infinite;
+}
+
+/* Статус: В процессе */
+.status-in-progress {
+  border-left: 6px solid #4a1095;
+  background: linear-gradient(135deg, #fe9901 10%, #fffaf0 70%);
+}
+
+.status-in-progress::after {
+  content: "⏳";
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 32px;
+  opacity: 0.7;
+  animation: spin 6s linear infinite;
+}
+
+/* Статус: Изучено */
+.status-completed {
+  border-left: 6px solid #4a1095;
+  background: linear-gradient(135deg, #51eed1da 10%, #fffaf0 70%);
+}
+
+.status-completed::after {
+  content: "✅";
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 32px;
+  animation: bounce 6s ease-out infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 10px 40px rgba(243, 156, 18, 0.15);
+  }
+  50% {
+    box-shadow: 0 10px 60px rgba(243, 156, 18, 0.25);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.technology-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  padding-right: 50px;
+  line-height: 1.4;
+}
+
+.technology-card p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+/* КОНТЕЙНЕР ПРОГРЕССА */
+.progress-container {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 10px;
+  transition: width 3s ease-out;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  min-width: 50px;
+}
+
+/* Прогресс для "Не начато" */
+.status-not-started .progress-fill {
+  background: linear-gradient(90deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+.status-not-started:hover .progress-fill {
+  width: 0%;
+}
+
+.status-not-started .progress-text {
+  color: #7f8c8d;
+}
+
+/* Прогресс для "В процессе" */
+.status-in-progress .progress-fill {
+  background: linear-gradient(90deg, #7b12f3 0%, #e67e22 100%);
+}
+
+.status-in-progress:hover .progress-fill {
+  width: 21%;
+}
+
+.status-in-progress .progress-text {
+  color: #d68910;
+}
+
+/* Прогресс для "Изучено" */
+.status-completed .progress-fill {
+  background: linear-gradient(90deg, #7b12f3 0%, #51eed1da 100%);
+}
+
+.status-completed:hover .progress-fill {
+  width: 100%;
+}
+
+.status-completed .progress-text {
+  color: #186a3b;
+}
+
+.technology-card span {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.status-not-started span {
+  background-color: #ecf0f1;
+  color: #201f1f;
+}
+
+.status-in-progress span {
+  background-color: #f8ead3;
+  color: #9c6101;
+}
+
+.status-completed span {
+  background-color: #d5f4e6;
+  color: #0e8463;
+}
+
+@media (max-width: 768px) {
+  .technology-card {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .technology-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .technology-card p {
+    font-size: 0.95rem;
+  }
+
+  .technology-card::after {
+    font-size: 28px;
+    top: 15px;
+    right: 15px;
+  }
+}
