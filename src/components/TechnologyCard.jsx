@@ -1,39 +1,46 @@
-function TechnologyCard({ title, description, status }) {
-  let statusLabel;
-  let statusClass;
-  let progressPercent;
+import React from 'react';
+import './TechnologyCard.css';
 
-  if (status === 'not-started') {
-    statusLabel = 'Не начато';
-    statusClass = 'status-not-started';
-    progressPercent = '0%';
-  } else if (status === 'in-progress') {
-    statusLabel = 'В процессе';
-    statusClass = 'status-in-progress';
-    progressPercent = '21%';
-  } else if (status === 'completed') {
-    statusLabel = 'Изучено';
-    statusClass = 'status-completed';
-    progressPercent = '100%';
-  } else {
-    statusLabel = 'Неизвестно';
-    statusClass = '';
-    progressPercent = '0%';
-  }
+function TechnologyCard({ id, title, description, status, onStatusChange }) {
+  const statuses = ['not-started', 'in-progress', 'completed'];
+
+  const handleClick = () => {
+    const currentIndex = statuses.indexOf(status);
+    const nextIndex = (currentIndex + 1) % statuses.length;
+    const nextStatus = statuses[nextIndex];
+    
+    // Уведомляем родителя (App.jsx)
+    if (onStatusChange) {
+      onStatusChange(id, nextStatus);
+    }
+  };
+
+  const getStatusText = (statusKey) => {
+    const statusMap = {
+      'not-started': 'Не начато',
+      'in-progress': 'В процессе',
+      'completed': 'Завершено'
+    };
+    return statusMap[statusKey] || statusKey;
+  };
 
   return (
-    <div className={`technology-card ${statusClass}`}>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      <span>Статус: {statusLabel}</span>
-      
-      {/* Прогресс бар */}
-      <div className="progress-container">
-        <div className="progress-bar">
-          <div className="progress-fill"></div>
-        </div>
-        <span className="progress-text">{progressPercent}</span>
+    <div 
+      className={`technology-card status-${status}`}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleClick();
+        }
+      }}
+    >
+      <div className="card-header">
+        <h3 className="card-title">{title}</h3>
+        <span className="status-badge">{getStatusText(status)}</span>
       </div>
+      <p className="card-description">{description}</p>
     </div>
   );
 }

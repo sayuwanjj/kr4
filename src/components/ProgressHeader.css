@@ -1,178 +1,188 @@
 .progress-header {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-  margin-bottom: 30px;
-  animation: slideDown 0.6s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.progress-header h1 {
-  font-size: 2.3rem;
-  color: #2c3e50;
-  margin-bottom: 35px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-/* СТАТИСТИКА */
-.stats-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  padding: 30px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 40px;
 }
 
-.stat-item {
-  background: linear-gradient(135deg, #f5f7fa 0%, #f8fafb 100%);
-  padding: 28px;
-  border-radius: 15px;
-  border-left: 5px solid #667eea;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 10px rgb(85, 7, 255);
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.stat-item:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgb(39, 6, 109);
-  border-left-color: #764ba2;
-}
-
-.stat-label {
-  display: block;
-  font-size: 0.8rem;
-  color: #7f8c8d;
-  font-weight: 700;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-.stat-value {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ПРОГРЕСС СЕКЦИЯ */
-.progress-section {
-  background: linear-gradient(135deg, #f8f9fb 0%, #f5f7fa 100%);
-  padding: 35px;
-  border-radius: 15px;
-  border: 2px solid #e8eef5;
-}
-
-.progress-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 20px;
-}
-
-.progress-label {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #2c3e50;
-}
-
-.progress-percent {
-  font-size: 1.8rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ПРОГРЕСС БАР */
-.progress-bar-container {
-  height: 14px;
-  background: linear-gradient(90deg, #e0e6f5 0%, #e8eef5 100%);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 25px;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  border-radius: 10px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
-}
-
-/* СООБЩЕНИЕ */
-.progress-message {
+.header-title {
+  margin-bottom: 30px;
   text-align: center;
 }
 
-.progress-message p {
-  font-size: 1rem;
-  color: #2c3e50;
-  font-weight: 600;
-  margin: 0;
-  animation: slideUp 0.6s ease-out;
+.header-title h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.subtitle {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.95;
+  font-weight: 300;
+}
+
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 16px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+}
+
+.stat-value.total {
+  color: #ffffff;
+}
+
+.stat-value.not-started {
+  color: #ff6b6b;
+}
+
+.stat-value.in-progress {
+  color: #ffa94d;
+}
+
+.stat-value.completed {
+  color: #45b7d1;
+}
+
+.progress-bar-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.progress-percentage {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+  border-radius: 12px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
 }
 
 @media (max-width: 768px) {
   .progress-header {
-    padding: 25px;
-    margin-bottom: 25px;
-  }
-
-  .progress-header h1 {
-    font-size: 1.8rem;
-    margin-bottom: 25px;
-  }
-
-  .stats-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    padding: 20px 0;
     margin-bottom: 30px;
   }
 
-  .stat-item {
-    padding: 20px;
+  .header-container {
+    padding: 0 15px;
   }
 
-  .stat-value {
+  .header-title h1 {
     font-size: 2rem;
   }
 
-  .progress-section {
-    padding: 20px;
+  .subtitle {
+    font-size: 1rem;
   }
 
-  .progress-info {
-    flex-direction: column;
-    align-items: flex-start;
+  .progress-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .stat-item {
+    padding: 12px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    min-width: 50px;
+  }
+
+  .progress-bar-container {
+    padding: 16px;
+  }
+
+  .progress-label {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .progress-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .stat-item {
+    padding: 10px;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
   }
 }
