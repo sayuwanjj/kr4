@@ -1,18 +1,14 @@
 import React from 'react';
 import './TechnologyCard.css';
 
-function TechnologyCard({ id, title, description, status, onStatusChange }) {
+function TechnologyCard({ id, title, description, status, onStatusChange, onToggleNotes, hasNotes }) {
   const statuses = ['not-started', 'in-progress', 'completed'];
 
   const handleClick = () => {
     const currentIndex = statuses.indexOf(status);
     const nextIndex = (currentIndex + 1) % statuses.length;
     const nextStatus = statuses[nextIndex];
-    
-    // Уведомляем родителя (App.jsx)
-    if (onStatusChange) {
-      onStatusChange(id, nextStatus);
-    }
+    onStatusChange(id, nextStatus);
   };
 
   const getStatusText = (statusKey) => {
@@ -25,23 +21,37 @@ function TechnologyCard({ id, title, description, status, onStatusChange }) {
   };
 
   return (
-    <div 
-      className={`technology-card status-${status}`}
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
-      onKeyPress={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          handleClick();
-        }
-      }}
-    >
-      <div className="card-header">
-        <h3 className="card-title">{title}</h3>
-        <span className="status-badge">{getStatusText(status)}</span>
+    <>
+      <div 
+        className={`technology-card status-${status}`}
+        onClick={handleClick}
+        role="button"
+        tabIndex={0}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleClick();
+          }
+        }}
+      >
+        <div className="card-header">
+          <h3 className="card-title">{title}</h3>
+          <div className="card-actions">
+            <span className="status-badge">{getStatusText(status)}</span>
+            <button
+              className={`notes-btn ${hasNotes ? 'has-notes' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleNotes();
+              }}
+              title="Показать заметки"
+            >
+              📝
+            </button>
+          </div>
+        </div>
+        <p className="card-description">{description}</p>
       </div>
-      <p className="card-description">{description}</p>
-    </div>
+    </>
   );
 }
 

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import ProgressHeader from './components/ProgressHeader';
 import TechnologyCard from './components/TechnologyCard';
 import QuickActions from './components/QuickActions';
+import SearchBox from './components/SearchBox';
+import TechnologyNotes from './components/TechnologyNotes';
 
 function App() {
   const [technologies, setTechnologies] = useState([
@@ -10,43 +12,74 @@ function App() {
       id: 1,
       title: 'React Components',
       description: 'Базовые компоненты React и их жизненный цикл',
-      status: 'not-started'
+      status: 'not-started',
+      notes: ''
     },
     {
       id: 2,
       title: 'JSX Syntax',
       description: 'Синтаксис JSX и преобразование в JavaScript',
-      status: 'not-started'
+      status: 'not-started',
+      notes: ''
     },
     {
       id: 3,
       title: 'State & Props',
       description: 'Управление состоянием и передача props',
-      status: 'not-started'
+      status: 'not-started',
+      notes: ''
     },
     {
       id: 4,
       title: 'Hooks',
       description: 'useState, useEffect и другие хуки React',
-      status: 'not-started'
+      status: 'not-started',
+      notes: ''
     },
     {
       id: 5,
       title: 'Event Handling',
       description: 'Обработка событий в React компонентах',
-      status: 'not-started'
+      status: 'not-started',
+      notes: ''
     },
     {
       id: 6,
       title: 'Form Validation',
       description: 'Валидация форм и обработка пользовательского ввода',
-      status: 'not-started'
+      status: 'not-started',
+      notes: ''
     }
   ]);
 
   const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showNotes, setShowNotes] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Обработчик изменения статуса карточки
+  // ✅ ЗАГРУЖАЕМ ИЗ LOCALSTORAGE ПРИ ПЕРВОМ РЕНДЕРЕ
+  useEffect(() => {
+    const saved = localStorage.getItem('techTrackerData');
+    if (saved) {
+      try {
+        const parsedData = JSON.parse(saved);
+        setTechnologies(parsedData);
+        console.log('✅ Данные загружены из localStorage!');
+      } catch (error) {
+        console.error('❌ Ошибка при загрузке:', error);
+      }
+    }
+    setIsLoaded(true);
+  }, []);
+
+  // ✅ СОХРАНЯЕМ В LOCALSTORAGE ПРИ ЛЮБОМ ИЗМЕНЕНИИ
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('techTrackerData', JSON.stringify(technologies));
+      console.log('💾 Данные сохранены в localStorage!');
+    }
+  }, [technologies, isLoaded]);
+
   const handleStatusChange = (id, newStatus) => {
     setTechnologies(prevTechs =>
       prevTechs.map(tech =>
@@ -55,45 +88,61 @@ function App() {
     );
   };
 
-  // Отметить все как выполненные
+  const updateTechnologyNotes = (techId, newNotes) => {
+    setTechnologies(prevTech =>
+      prevTech.map(tech =>
+        tech.id === techId ? { ...tech, notes: newNotes } : tech
+      )
+    );
+  };
+
   const handleMarkAllCompleted = () => {
     setTechnologies(prevTechs =>
       prevTechs.map(tech => ({ ...tech, status: 'completed' }))
     );
   };
 
-  // Сбросить все статусы
   const handleResetAll = () => {
     setTechnologies(prevTechs =>
       prevTechs.map(tech => ({ ...tech, status: 'not-started' }))
     );
   };
 
-  // Случайный выбор следующей технологии
   const handleRandomNext = () => {
     const notCompleted = technologies.filter(t => t.status !== 'completed');
-    
     if (notCompleted.length > 0) {
       const randomTech = notCompleted[Math.floor(Math.random() * notCompleted.length)];
       handleStatusChange(randomTech.id, 'in-progress');
     }
   };
 
-  // Фильтрация технологий
   const getFilteredTechnologies = () => {
+    let filtered = technologies;
+
     switch (activeFilter) {
       case 'not-started':
-        return technologies.filter(tech => tech.status === 'not-started');
+        filtered = filtered.filter(tech => tech.status === 'not-started');
+        break;
       case 'in-progress':
-        return technologies.filter(tech => tech.status === 'in-progress');
+        filtered = filtered.filter(tech => tech.status === 'in-progress');
+        break;
       case 'completed':
-        return technologies.filter(tech => tech.status === 'completed');
+        filtered = filtered.filter(tech => tech.status === 'completed');
+        break;
       default:
-        return technologies;
+        break;
     }
+
+    if (searchQuery) {
+      filtered = filtered.filter(tech =>
+        tech.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tech.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    return filtered;
   };
 
-  // Подсчет технологий по статусам
   const filterByStatus = (statusKey) => {
     return technologies.filter(tech => tech.status === statusKey);
   };
@@ -106,7 +155,6 @@ function App() {
 
       <main className="main-content">
         <div className="container">
-          {/* Быстрые действия */}
           <QuickActions 
             technologies={technologies}
             onMarkAllCompleted={handleMarkAllCompleted}
@@ -114,7 +162,12 @@ function App() {
             onRandomNext={handleRandomNext}
           />
 
-          {/* Фильтры */}
+          <SearchBox 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            resultsCount={filteredTechnologies.length}
+          />
+
           <section className="filters-section">
             <h2>Фильтры</h2>
             <div className="filter-buttons">
@@ -145,20 +198,29 @@ function App() {
             </div>
           </section>
 
-          {/* Карточки технологий */}
           <section className="technologies-section">
             <h2>Технологии к изучению</h2>
             {filteredTechnologies.length > 0 ? (
               <div className="technologies-grid">
                 {filteredTechnologies.map(tech => (
-                  <TechnologyCard
-                    key={tech.id}
-                    id={tech.id}
-                    title={tech.title}
-                    description={tech.description}
-                    status={tech.status}
-                    onStatusChange={handleStatusChange}
-                  />
+                  <div key={tech.id} className="tech-card-wrapper">
+                    <TechnologyCard
+                      id={tech.id}
+                      title={tech.title}
+                      description={tech.description}
+                      status={tech.status}
+                      onStatusChange={handleStatusChange}
+                      onToggleNotes={() => setShowNotes(showNotes === tech.id ? null : tech.id)}
+                      hasNotes={!!tech.notes}
+                    />
+                    {showNotes === tech.id && (
+                      <TechnologyNotes
+                        notes={tech.notes}
+                        onNotesChange={updateTechnologyNotes}
+                        techId={tech.id}
+                      />
+                    )}
+                  </div>
                 ))}
               </div>
             ) : (

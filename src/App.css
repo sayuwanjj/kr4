@@ -47,6 +47,7 @@
   border-color: #2563eb;
   color: #2563eb;
   background: #f0f9ff;
+  transform: translateY(-2px);
 }
 
 .filter-btn.active {
@@ -54,6 +55,11 @@
   color: #ffffff;
   border-color: #2563eb;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.filter-btn.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
 }
 
 /* Карточки */
@@ -70,8 +76,20 @@
 
 .technologies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.8;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Пустое состояние */
@@ -84,12 +102,20 @@
   border-radius: 12px;
   border: 2px dashed #e5e7eb;
   text-align: center;
+  grid-column: 1 / -1;
 }
 
 .empty-state p {
   font-size: 1.1rem;
   color: #9ca3af;
   margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .technologies-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -107,7 +133,7 @@
   }
 
   .technologies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
 
@@ -117,7 +143,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .main-content {
     padding: 20px 0;
   }
@@ -144,6 +170,7 @@
   .filter-btn {
     padding: 8px 12px;
     font-size: 0.85rem;
+    flex: 1 1 auto;
   }
 
   .empty-state {
