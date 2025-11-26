@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
+import useTechnologies from './hooks/useTechnologies';
 import ProgressHeader from './components/ProgressHeader';
 import TechnologyCard from './components/TechnologyCard';
 import QuickActions from './components/QuickActions';
@@ -7,113 +8,25 @@ import SearchBox from './components/SearchBox';
 import TechnologyNotes from './components/TechnologyNotes';
 
 function App() {
-  const [technologies, setTechnologies] = useState([
-    {
-      id: 1,
-      title: 'React Components',
-      description: 'Базовые компоненты React и их жизненный цикл',
-      status: 'not-started',
-      notes: ''
-    },
-    {
-      id: 2,
-      title: 'JSX Syntax',
-      description: 'Синтаксис JSX и преобразование в JavaScript',
-      status: 'not-started',
-      notes: ''
-    },
-    {
-      id: 3,
-      title: 'State & Props',
-      description: 'Управление состоянием и передача props',
-      status: 'not-started',
-      notes: ''
-    },
-    {
-      id: 4,
-      title: 'Hooks',
-      description: 'useState, useEffect и другие хуки React',
-      status: 'not-started',
-      notes: ''
-    },
-    {
-      id: 5,
-      title: 'Event Handling',
-      description: 'Обработка событий в React компонентах',
-      status: 'not-started',
-      notes: ''
-    },
-    {
-      id: 6,
-      title: 'Form Validation',
-      description: 'Валидация форм и обработка пользовательского ввода',
-      status: 'not-started',
-      notes: ''
-    }
-  ]);
-
+  // ✅ Используем новый хук с updateAllStatus
+  const { technologies, updateStatus, updateAllStatus, updateNotes, progress } = useTechnologies();
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotes, setShowNotes] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  // ✅ ЗАГРУЖАЕМ ИЗ LOCALSTORAGE ПРИ ПЕРВОМ РЕНДЕРЕ
-  useEffect(() => {
-    const saved = localStorage.getItem('techTrackerData');
-    if (saved) {
-      try {
-        const parsedData = JSON.parse(saved);
-        setTechnologies(parsedData);
-        console.log('✅ Данные загружены из localStorage!');
-      } catch (error) {
-        console.error('❌ Ошибка при загрузке:', error);
-      }
-    }
-    setIsLoaded(true);
-  }, []);
-
-  // ✅ СОХРАНЯЕМ В LOCALSTORAGE ПРИ ЛЮБОМ ИЗМЕНЕНИИ
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem('techTrackerData', JSON.stringify(technologies));
-      console.log('💾 Данные сохранены в localStorage!');
-    }
-  }, [technologies, isLoaded]);
-
-  const handleStatusChange = (id, newStatus) => {
-    setTechnologies(prevTechs =>
-      prevTechs.map(tech =>
-        tech.id === id ? { ...tech, status: newStatus } : tech
-      )
-    );
-  };
-
-  const updateTechnologyNotes = (techId, newNotes) => {
-    setTechnologies(prevTech =>
-      prevTech.map(tech =>
-        tech.id === techId ? { ...tech, notes: newNotes } : tech
-      )
-    );
-  };
-
+  // ✅ Передаём новую функцию вместо старой логики
   const handleMarkAllCompleted = () => {
-    setTechnologies(prevTechs =>
-      prevTechs.map(tech => ({ ...tech, status: 'completed' }))
-    );
+    updateAllStatus('completed');
+    console.log('✅ Все технологии отмечены как выполненные!');
   };
 
   const handleResetAll = () => {
-    setTechnologies(prevTechs =>
-      prevTechs.map(tech => ({ ...tech, status: 'not-started' }))
-    );
+    updateAllStatus('not-started');
+    console.log('🔄 Все статусы сброшены!');
   };
 
-  const handleRandomNext = () => {
-    const notCompleted = technologies.filter(t => t.status !== 'completed');
-    if (notCompleted.length > 0) {
-      const randomTech = notCompleted[Math.floor(Math.random() * notCompleted.length)];
-      handleStatusChange(randomTech.id, 'in-progress');
-    }
+  const filterByStatus = (statusKey) => {
+    return technologies.filter(tech => tech.status === statusKey);
   };
 
   const getFilteredTechnologies = () => {
@@ -143,10 +56,6 @@ function App() {
     return filtered;
   };
 
-  const filterByStatus = (statusKey) => {
-    return technologies.filter(tech => tech.status === statusKey);
-  };
-
   const filteredTechnologies = getFilteredTechnologies();
 
   return (
@@ -155,14 +64,15 @@ function App() {
 
       <main className="main-content">
         <div className="container">
-          <QuickActions 
+          {/* ✅ Передаём updateAllStatus */}
+          <QuickActions
             technologies={technologies}
             onMarkAllCompleted={handleMarkAllCompleted}
             onResetAll={handleResetAll}
-            onRandomNext={handleRandomNext}
+            onUpdateAll={updateAllStatus}
           />
 
-          <SearchBox 
+          <SearchBox
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             resultsCount={filteredTechnologies.length}
@@ -171,25 +81,25 @@ function App() {
           <section className="filters-section">
             <h2>Фильтры</h2>
             <div className="filter-buttons">
-              <button 
+              <button
                 className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('all')}
               >
                 Все ({technologies.length})
               </button>
-              <button 
+              <button
                 className={`filter-btn ${activeFilter === 'not-started' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('not-started')}
               >
                 Не начато ({filterByStatus('not-started').length})
               </button>
-              <button 
+              <button
                 className={`filter-btn ${activeFilter === 'in-progress' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('in-progress')}
               >
                 В процессе ({filterByStatus('in-progress').length})
               </button>
-              <button 
+              <button
                 className={`filter-btn ${activeFilter === 'completed' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('completed')}
               >
@@ -209,14 +119,14 @@ function App() {
                       title={tech.title}
                       description={tech.description}
                       status={tech.status}
-                      onStatusChange={handleStatusChange}
+                      onStatusChange={updateStatus}
                       onToggleNotes={() => setShowNotes(showNotes === tech.id ? null : tech.id)}
                       hasNotes={!!tech.notes}
                     />
                     {showNotes === tech.id && (
                       <TechnologyNotes
                         notes={tech.notes}
-                        onNotesChange={updateTechnologyNotes}
+                        onNotesChange={updateNotes}
                         techId={tech.id}
                       />
                     )}
