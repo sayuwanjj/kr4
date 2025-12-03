@@ -2,36 +2,36 @@ import { useState } from 'react';
 import Modal from './Modal';
 import './QuickActions.css';
 
-function QuickActions({ onMarkAllCompleted, onResetAll, technologies, onUpdateAll }) {
+function QuickActions({ 
+  technologies, 
+  onMarkAllCompleted, 
+  onResetAll, 
+  onAddClick,
+  onImportClick,
+  onExportClick,
+  onResetAllData 
+}) {
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportData, setExportData] = useState('');
-
-  // ✅ Обработчик для "Отметить всё как выполненные"
-  const handleMarkAllCompleted = () => {
-    if (onUpdateAll) {
-      onUpdateAll('completed');
-    } else if (onMarkAllCompleted) {
-      onMarkAllCompleted();
-    }
-  };
-
-  // ✅ Обработчик для "Сбросить все статусы"
-  const handleResetAll = () => {
-    if (onUpdateAll) {
-      onUpdateAll('not-started');
-    } else if (onResetAll) {
-      onResetAll();
-    }
-  };
 
   const handleExport = () => {
     const data = {
       exportedAt: new Date().toLocaleString('ru-RU'),
+      roadmapName: 'Дорожная карта изучения React',
+      version: '1.0',
       totalTechnologies: technologies.length,
       completed: technologies.filter(t => t.status === 'completed').length,
       inProgress: technologies.filter(t => t.status === 'in-progress').length,
       notStarted: technologies.filter(t => t.status === 'not-started').length,
-      technologies: technologies
+      technologies: technologies.map(tech => ({
+        id: tech.id,
+        title: tech.title,
+        description: tech.description,
+        status: tech.status,
+        notes: tech.notes || '',
+        deadline: tech.deadline || '',
+        resources: tech.resources || []
+      }))
     };
 
     const dataStr = JSON.stringify(data, null, 2);
@@ -40,7 +40,6 @@ function QuickActions({ onMarkAllCompleted, onResetAll, technologies, onUpdateAl
 
     // Копируем в буфер обмена
     navigator.clipboard.writeText(dataStr);
-    console.log('✅ Данные скопированы в буфер обмена');
   };
 
   return (
@@ -48,26 +47,49 @@ function QuickActions({ onMarkAllCompleted, onResetAll, technologies, onUpdateAl
       <h3>🚀 Быстрые действия</h3>
       <div className="action-buttons">
         <button
-          onClick={handleMarkAllCompleted}
+          onClick={onAddClick}
           className="btn btn-success"
-          title="Отметить все технологии как выполненные"
+          title="Добавить новую технологию"
         >
-          ✅ Отметить всё как выполненные
+          ＋ Добавить технологию
         </button>
         <button
-          onClick={handleResetAll}
-          className="btn btn-warning"
-          title="Сбросить статусы всех технологий"
+          onClick={onImportClick}
+          className="btn btn-import"
+          title="Импортировать данные из JSON"
         >
-          🔄 Сбросить все статусы
+          📥 Импорт данных
         </button>
         <button
-          onClick={handleExport}
+          onClick={onExportClick}
           className="btn btn-info"
           title="Экспортировать данные в JSON"
         >
           📤 Экспорт данных
         </button>
+        <button
+          onClick={onMarkAllCompleted}
+          className="btn btn-complete"
+          title="Отметить все технологии как выполненные"
+        >
+          ✅ Всё выполнено
+        </button>
+        <button
+          onClick={onResetAll}
+          className="btn btn-warning"
+          title="Сбросить статусы всех технологий"
+        >
+          🔄 Сбросить статусы
+        </button>
+        {onResetAllData && (
+          <button
+            onClick={onResetAllData}
+            className="btn btn-danger"
+            title="Полный сброс всех данных"
+          >
+            🗑️ Сбросить всё
+          </button>
+        )}
       </div>
 
       <Modal
@@ -85,8 +107,18 @@ function QuickActions({ onMarkAllCompleted, onResetAll, technologies, onUpdateAl
             className="export-textarea"
             value={exportData}
             readOnly
-            rows="10"
+            rows="12"
           />
+
+          <div className="export-stats">
+            <h4>Содержимое файла:</h4>
+            <ul>
+              <li>Технологий: {technologies.length}</li>
+              <li>Выполнено: {technologies.filter(t => t.status === 'completed').length}</li>
+              <li>В процессе: {technologies.filter(t => t.status === 'in-progress').length}</li>
+              <li>Не начато: {technologies.filter(t => t.status === 'not-started').length}</li>
+            </ul>
+          </div>
 
           <div className="export-actions">
             <button
@@ -96,6 +128,20 @@ function QuickActions({ onMarkAllCompleted, onResetAll, technologies, onUpdateAl
               }}
             >
               📋 Скопировать ещё раз
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                const blob = new Blob([exportData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+            >
+              💾 Скачать файл
             </button>
             <button
               className="btn btn-secondary"

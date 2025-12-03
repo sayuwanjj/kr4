@@ -1,16 +1,7 @@
 import React from 'react';
 import './TechnologyCard.css';
 
-function TechnologyCard({ id, title, description, status, onStatusChange, onToggleNotes, hasNotes }) {
-  const statuses = ['not-started', 'in-progress', 'completed'];
-
-  const handleClick = () => {
-    const currentIndex = statuses.indexOf(status);
-    const nextIndex = (currentIndex + 1) % statuses.length;
-    const nextStatus = statuses[nextIndex];
-    onStatusChange(id, nextStatus);
-  };
-
+function TechnologyCard({ id, title, description, status, onStatusChange, onDelete, onEdit }) {
   const getStatusText = (statusKey) => {
     const statusMap = {
       'not-started': 'Не начато',
@@ -20,38 +11,70 @@ function TechnologyCard({ id, title, description, status, onStatusChange, onTogg
     return statusMap[statusKey] || statusKey;
   };
 
+  // Обработчик удаления
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
+
+  // Обработчик редактирования
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(e);
+    }
+  };
+
   return (
-    <>
-      <div 
-        className={`technology-card status-${status}`}
-        onClick={handleClick}
-        role="button"
-        tabIndex={0}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            handleClick();
-          }
-        }}
-      >
-        <div className="card-header">
-          <h3 className="card-title">{title}</h3>
-          <div className="card-actions">
-            <span className="status-badge">{getStatusText(status)}</span>
-            <button
-              className={`notes-btn ${hasNotes ? 'has-notes' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleNotes();
-              }}
-              title="Показать заметки"
+    <div className={`technology-card status-${status}`}>
+      <div className="card-header">
+        <h3 className="card-title">{title}</h3>
+        <div className="card-actions">
+          <div className="action-buttons">
+            <button 
+              className="action-btn edit-btn"
+              onClick={handleEdit}
+              title="Редактировать"
             >
-              📝
+              ✏️
+            </button>
+            <button 
+              className="action-btn delete-btn"
+              onClick={handleDelete}
+              title="Удалить"
+            >
+              🗑️
             </button>
           </div>
+          <span className="status-badge">{getStatusText(status)}</span>
         </div>
-        <p className="card-description">{description}</p>
       </div>
-    </>
+      <p className="card-description">{description}</p>
+      <div className="card-footer">
+        <div className="status-controls">
+          <button 
+            className={`status-btn ${status === 'not-started' ? 'active' : ''}`}
+            onClick={(e) => { e.stopPropagation(); onStatusChange(id, 'not-started'); }}
+          >
+            ○
+          </button>
+          <button 
+            className={`status-btn ${status === 'in-progress' ? 'active' : ''}`}
+            onClick={(e) => { e.stopPropagation(); onStatusChange(id, 'in-progress'); }}
+          >
+            ◐
+          </button>
+          <button 
+            className={`status-btn ${status === 'completed' ? 'active' : ''}`}
+            onClick={(e) => { e.stopPropagation(); onStatusChange(id, 'completed'); }}
+          >
+            ◉
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

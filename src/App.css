@@ -1,3 +1,4 @@
+
 .App {
   min-height: 100vh;
   background: #f8f9fa;
@@ -19,10 +20,11 @@
 }
 
 .filters-section h2 {
-  font-size: 1.8rem;
-  color: #111827;
+  font-size: 2rem;
+  color: #ffffff;
   margin: 0 0 20px 0;
-  font-weight: 600;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .filter-buttons {
@@ -34,32 +36,44 @@
 .filter-btn {
   padding: 10px 20px;
   border: 2px solid #e5e7eb;
-  background: #ffffff;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.276), rgba(252, 252, 255, 0.26));
+  color: #ffffff;
+  border-color: rgba(82, 22, 172, 0.708);
+  box-shadow: 0 4px 12px rgb(82, 22, 172);
   border-radius: 6px;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #6b7280;
 }
 
 .filter-btn:hover {
-  border-color: #2563eb;
-  color: #2563eb;
-  background: #f0f9ff;
+  border-color: #ffffff;
+  color: #ffffff;
+  background: radial-gradient(circle, rgba(82, 22, 172, 0.8), rgba(58, 16, 149, 0.9));
   transform: translateY(-2px);
 }
 
+/* АКТИВНАЯ кнопка - белая с черным текстом */
 .filter-btn.active {
-  background: #2563eb;
-  color: #ffffff;
-  border-color: #2563eb;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  padding: 10px 20px;
+  border: 2px solid #ffffff;
+  background: #ffffff; /* БЕЛЫЙ фон */
+  color: #000000; /* ЧЕРНЫЙ текст */
+  border-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .filter-btn.active:hover {
+  border-color: #ffffff;
+  color: #000000;
+  background: #f0f0f0; /* Светло-серый при наведении */
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
 }
 
 /* Карточки */
@@ -69,9 +83,10 @@
 
 .technologies-section h2 {
   font-size: 1.8rem;
-  color: #111827;
+  color: #ffffff;
   margin: 0 0 30px 0;
   font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .technologies-grid {
@@ -141,6 +156,11 @@
     padding: 8px 16px;
     font-size: 0.9rem;
   }
+  
+  .filter-btn.active {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -172,8 +192,499 @@
     font-size: 0.85rem;
     flex: 1 1 auto;
   }
+  
+  .filter-btn.active {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    flex: 1 1 auto;
+  }
 
   .empty-state {
     padding: 40px 20px;
+  }
+}
+/* Стили для добавления/удаления/редактирования */
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-add-tech {
+  background: #3a1095;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add-tech:hover {
+  background: #2c1f7a;
+  transform: translateY(-2px);
+}
+
+/* Модальное окно формы */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #3a1095;
+  box-shadow: 0 0 0 3px rgba(58, 16, 149, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* Кнопки действий в карточке */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.delete-btn:hover {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Статус-контролы в карточке */
+.card-footer {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.status-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.status-btn {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.status-btn:hover {
+  border-color: #3a1095;
+  background: #f5f5f5;
+}
+
+.status-btn.active {
+  background: #3a1095;
+  color: white;
+  border-color: #3a1095;
+}
+
+.status-not-started .status-badge {
+  background: #95a5a6;
+  color: white;
+}
+
+.status-in-progress .status-badge {
+  background: #f9c74f;
+  color: #333;
+}
+
+.status-completed .status-badge {
+  background: #51eed1;
+  color: #333;
+}
+
+/* Сообщение о пустых результатах */
+.no-results {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .filters-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .btn-add-tech {
+    width: 100%;
+  }
+  
+  .action-buttons {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .status-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
+}
+/* Уведомления */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 300px;
+  max-width: 500px;
+  z-index: 9999;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-left: 4px solid #b91c1c;
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-left: 4px solid #047857;
+}
+
+.notification button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 0 0 15px;
+}
+
+/* Модальное окно импорта */
+.import-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.import-status {
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.import-status.loading {
+  background: #f0f9ff;
+  border: 2px solid #dbeafe;
+}
+
+.import-status.success {
+  background: #f0fdf4;
+  border: 2px solid #bbf7d0;
+}
+
+.import-status.error {
+  background: #fef2f2;
+  border: 2px solid #fecaca;
+}
+
+.status-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.import-instructions {
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 2px dashed #cbd5e1;
+}
+
+.file-format-info {
+  margin-top: 15px;
+  padding: 15px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.file-format-info h4 {
+  margin: 0 0 10px 0;
+  color: #374151;
+}
+
+.file-format-info ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6b7280;
+}
+
+.file-format-info li {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.import-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.file-input-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.sample-download {
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.sample-download p {
+  margin: 0 0 10px 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.import-preview {
+  margin-top: 15px;
+  padding: 15px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.import-preview h4 {
+  margin: 0 0 10px 0;
+  color: #374151;
+}
+
+.import-preview ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6b7280;
+}
+
+.import-preview li {
+  margin-bottom: 5px;
+}
+
+.error-message {
+  color: #dc2626;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.error-details {
+  margin-top: 15px;
+  padding: 15px;
+  background: #fee2e2;
+  border-radius: 6px;
+  border-left: 4px solid #ef4444;
+}
+
+.error-details h4 {
+  margin: 0 0 10px 0;
+  color: #991b1b;
+}
+
+.error-details ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #7f1d1d;
+}
+
+.error-details li {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.import-help {
+  margin-top: 20px;
+  padding: 15px;
+  background: #eff6ff;
+  border-radius: 6px;
+  border: 1px solid #bfdbfe;
+}
+
+.import-help h4 {
+  margin: 0 0 10px 0;
+  color: #1e40af;
+}
+
+.import-help ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #374151;
+}
+
+.import-help li {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.export-stats {
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.export-stats h4 {
+  margin: 0 0 10px 0;
+  color: #374151;
+}
+
+.export-stats ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6b7280;
+}
+
+.export-stats li {
+  margin-bottom: 5px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .import-status {
+    padding: 15px;
+  }
+  
+  .error-details,
+  .import-help {
+    padding: 12px;
   }
 }

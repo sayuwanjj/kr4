@@ -24,11 +24,6 @@ function SearchBox({ searchQuery, onSearchChange, resultsCount }) {
             <path d="m21 21-4.35-4.35" />
           </svg>
         </div>
-        <div className="search-info">
-          <span className="results-count">
-            {searchQuery ? `Найдено: ${resultsCount}` : 'Введите текст для поиска'}
-          </span>
-        </div>
       </div>
     </div>
   );
